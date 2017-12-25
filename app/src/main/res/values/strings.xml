@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">AppArchitecture</string>
+
+    <string name="lbl_search">Search</string>
+    <string name="lbl_filter">Filters</string>
+    <string name="lbl_country">Country</string>
+    <string name="lbl_media">Media</string>
+    <string name="lbl_entity">Entity</string>
+
+    <string name="lbl_last_search">Last Searched</string>
+</resources>
