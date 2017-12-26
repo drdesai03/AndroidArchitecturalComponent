@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.inventyfy.architecture.R;
-import com.inventyfy.architecture.ui.search.activity.HomeActivity;
+import com.inventyfy.architecture.ui.home.search.activity.HomeActivity;
 
 public class SplashActivity extends AppCompatActivity {
 

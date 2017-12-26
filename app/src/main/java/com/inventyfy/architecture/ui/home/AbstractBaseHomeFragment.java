@@ -1,4 +1,4 @@
-package com.inventyfy.architecture.ui.search;
+package com.inventyfy.architecture.ui.home;
 
 import android.app.Activity;
 import android.databinding.ViewDataBinding;

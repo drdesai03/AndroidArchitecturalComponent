@@ -1,7 +1,7 @@
-package com.inventyfy.architecture.ui.search.viewmodel;
+package com.inventyfy.architecture.viewmodel.home.search;
 
 import com.inventyfy.architecture.base.viewmodel.AbstractViewModel;
-import com.inventyfy.architecture.ui.search.contract.ResultContract;
+import com.inventyfy.architecture.ui.home.search.contract.ResultContract;
 
 public class ResultViewModel extends AbstractViewModel<ResultContract.Presenter> implements ResultContract.Presenter {
 

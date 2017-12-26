@@ -1,4 +1,4 @@
-package com.inventyfy.architecture.ui.search;
+package com.inventyfy.architecture.ui.home;
 
 import com.inventyfy.architecture.base.activity.AbstractBaseNormalActivity;
 

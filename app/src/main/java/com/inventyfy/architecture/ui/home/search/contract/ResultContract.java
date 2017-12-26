@@ -1,8 +1,8 @@
-package com.inventyfy.architecture.ui.search.contract;
+package com.inventyfy.architecture.ui.home.search.contract;
 
 import com.inventyfy.architecture.base.presenter.BasePresenter;
 
-public interface SearchContract {
+public interface ResultContract {
 
     interface Presenter extends BasePresenter {
     }

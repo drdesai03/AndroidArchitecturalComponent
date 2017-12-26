@@ -1,10 +1,10 @@
-package com.inventyfy.architecture.ui.search.fragment;
+package com.inventyfy.architecture.ui.home.search.fragment;
 
 import com.inventyfy.architecture.R;
 import com.inventyfy.architecture.base.fragment.AbstractBaseDataBindingFragment;
 import com.inventyfy.architecture.databinding.FragmentResultBinding;
-import com.inventyfy.architecture.ui.search.contract.ResultContract;
-import com.inventyfy.architecture.ui.search.viewmodel.ResultViewModel;
+import com.inventyfy.architecture.ui.home.search.contract.ResultContract;
+import com.inventyfy.architecture.viewmodel.home.search.ResultViewModel;
 
 public class ResultFragment extends AbstractBaseDataBindingFragment<ResultContract.Presenter, ResultViewModel, FragmentResultBinding> {
 

@@ -1,4 +1,4 @@
-package com.inventyfy.architecture.ui.search.activity;
+package com.inventyfy.architecture.ui.home.search.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 
 import com.inventyfy.architecture.R;
 import com.inventyfy.architecture.databinding.ActivityHomeBinding;
-import com.inventyfy.architecture.ui.search.AbstractBaseHomeActivity;
-import com.inventyfy.architecture.ui.search.fragment.SearchFragment;
+import com.inventyfy.architecture.ui.home.AbstractBaseHomeActivity;
+import com.inventyfy.architecture.ui.home.search.fragment.SearchFragment;
 
 public class HomeActivity extends AbstractBaseHomeActivity implements AbstractBaseHomeActivity.UiHomeInteraction {
 

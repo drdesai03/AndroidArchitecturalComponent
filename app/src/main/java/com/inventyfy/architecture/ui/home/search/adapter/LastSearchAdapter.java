@@ -1,4 +1,4 @@
-package com.inventyfy.architecture.ui.search.adapter;
+package com.inventyfy.architecture.ui.home.search.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,7 +14,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space_8dp"
-            android:background="@drawable/search_view_background" />
+            android:background="@drawable/search_view_background"
+            app:iconifiedByDefault="false"
+            app:queryHint="Please enter search keyword" />
 
         <View
             android:layout_width="match_parent"
@@ -45,7 +48,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txt_country"
-                    android:layout_marginTop="@dimen/space_8dp" />
+                    android:layout_marginTop="@dimen/space_8dp"
+                    android:background="@drawable/search_view_background"
+                    android:padding="@dimen/space_8dp" />
             </RelativeLayout>
 
             <View
@@ -72,7 +77,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txt_media"
-                    android:layout_marginTop="@dimen/space_8dp" />
+                    android:layout_marginTop="@dimen/space_8dp"
+                    android:background="@drawable/search_view_background"
+                    android:padding="@dimen/space_8dp" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -94,7 +101,11 @@
             android:id="@+id/sp_entity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_8dp" />
+            android:layout_marginEnd="@dimen/space_8dp"
+            android:layout_marginStart="@dimen/space_8dp"
+            android:layout_marginTop="@dimen/space_8dp"
+            android:background="@drawable/search_view_background"
+            android:padding="@dimen/space_8dp" />
 
         <View
             android:layout_width="match_parent"
