@@ -1,19 +1,31 @@
 package com.inventyfy.architecture;
 
+import android.app.Activity;
 import android.app.Application;
+import android.util.Log;
 
-import com.inventyfy.architecture.di.component.ApplicationComponent;
-import com.inventyfy.architecture.di.component.DaggerApplicationComponent;
+import com.inventyfy.architecture.di.AppInjector;
 
-public class ArchitectureApplication extends Application {
+import javax.inject.Inject;
 
-    private ApplicationComponent component;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasActivityInjector;
+
+public class ArchitectureApplication extends Application implements HasActivityInjector {
+
+    @Inject
+    DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        component = DaggerApplicationComponent.builder().build();
-        component.inject(this);
+        AppInjector.initialize(this);
+        Log.d("Tag", "Value : " + dispatchingAndroidInjector);
+    }
+
+    @Override
+    public DispatchingAndroidInjector<Activity> activityInjector() {
+        return dispatchingAndroidInjector;
     }
 }

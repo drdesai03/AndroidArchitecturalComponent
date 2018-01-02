@@ -9,6 +9,11 @@ import android.support.v7.widget.Toolbar;
 
 import com.inventyfy.architecture.R;
 
+import javax.inject.Inject;
+
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.support.HasSupportFragmentInjector;
+
 public abstract class AbstractBaseNormalActivity extends AppCompatActivity {
 
     private Fragment fragmentToChange;

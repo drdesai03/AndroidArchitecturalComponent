@@ -29,6 +29,18 @@ public class AppExecutors {
                 new MainThreadExecutor());
     }
 
+    public Executor getDiskOp() {
+        return diskOp;
+    }
+
+    public Executor getNetworkOp() {
+        return networkOp;
+    }
+
+    public Executor getMainThread() {
+        return mainThread;
+    }
+
     private static class MainThreadExecutor implements Executor {
         private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 

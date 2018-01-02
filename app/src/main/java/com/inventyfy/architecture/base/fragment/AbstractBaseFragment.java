@@ -1,5 +1,6 @@
 package com.inventyfy.architecture.base.fragment;
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -10,27 +11,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.inventyfy.architecture.ArchitectureApplication;
 import com.inventyfy.architecture.base.presenter.BasePresenter;
 import com.inventyfy.architecture.base.viewmodel.AbstractViewModel;
 
+import javax.inject.Inject;
+
 public abstract class AbstractBaseFragment<P extends BasePresenter, VM extends AbstractViewModel<P>>
-        extends Fragment {
+        extends Fragment implements InjectableFragment {
 
     private P presenter;
     private VM viewModel;
 
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        viewModel = ViewModelProviders.of(this).get(getViewModel());
-        presenter = viewModel.getPresenter();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(getLayout(), container, false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        viewModel = ViewModelProviders.of(this).get(getViewModel());
+        presenter = viewModel.getPresenter();
     }
 
     public P getPresenter() {

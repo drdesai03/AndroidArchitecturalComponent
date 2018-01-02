@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.inventyfy.architecture.R;
 import com.inventyfy.architecture.databinding.FragmentSearchBinding;
@@ -19,7 +20,13 @@ import com.inventyfy.architecture.viewmodel.home.search.SearchViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchFragment extends AbstractBaseHomeFragment<SearchContract.Presenter, SearchViewModel, FragmentSearchBinding> {
+public class SearchFragment extends AbstractBaseHomeFragment<SearchContract.Presenter, SearchViewModel, FragmentSearchBinding>
+        implements View.OnClickListener {
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     public static SearchFragment getInstance() {
         final SearchFragment searchFragment = new SearchFragment();
@@ -71,6 +78,7 @@ public class SearchFragment extends AbstractBaseHomeFragment<SearchContract.Pres
 
         //EntityType Spinner
         createTypeEntitySpinner("");
+        getBinding().btnSearch.setOnClickListener(this);
     }
 
     private void createTypeEntitySpinner(final String mediaType) {
@@ -94,5 +102,23 @@ public class SearchFragment extends AbstractBaseHomeFragment<SearchContract.Pres
         return R.layout.fragment_search;
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_search:
+                final String searchQuery = getBinding().searchView.getQuery().toString();
+                final String country = getBinding().spCountry.getSelectedItem().toString();
+                final String media = getBinding().spMedia.getSelectedItem().toString();
+                final String entity = getBinding().spEntity.getSelectedItem().toString();
 
+                getPresenter().isDataValid(searchQuery, country, media, entity).observe(this, validationCheckEntity -> {
+                    if (validationCheckEntity == null) {
+                        Toast.makeText(getActivity(), "Please Enter all mandatory details", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), "All details are look good.!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+        }
+    }
 }

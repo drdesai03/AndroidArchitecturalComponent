@@ -23,7 +23,7 @@ public class CountryEntity {
 
     @Override
     public String toString() {
-        return countryName;
+        return countryCode;
     }
 
     public static List<CountryEntity> getAllCountry() {

@@ -7,10 +7,13 @@ import com.inventyfy.architecture.network.support.ApiResponse;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import retrofit2.http.QueryName;
 
 public interface SearchService {
 
     @GET("search")
-    LiveData<ApiResponse<ResultTable>> getSearchResult(@Query("term") final String term);
+    LiveData<ApiResponse<ResultTable>> getSearchResult(
+            @Query("term") final String term,
+            @Query("country") final String country,
+            @Query("media") final String media,
+            @Query("entity") final String entity);
 }

@@ -8,6 +8,8 @@ import com.inventyfy.architecture.database.dao.SearchDao;
 import com.inventyfy.architecture.database.table.ResultTable;
 import com.inventyfy.architecture.database.table.SearchTable;
 
+import javax.inject.Inject;
+
 @Database(entities = {SearchTable.class, ResultTable.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
 
