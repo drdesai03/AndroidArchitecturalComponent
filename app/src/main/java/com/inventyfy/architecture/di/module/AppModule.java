@@ -1,19 +1,12 @@
 package com.inventyfy.architecture.di.module;
 
 import android.app.Application;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.persistence.room.Room;
 
-import com.inventyfy.architecture.ArchitectureApplication;
-import com.inventyfy.architecture.base.viewmodel.BaseViewModelFactory;
 import com.inventyfy.architecture.database.AppDatabase;
+import com.inventyfy.architecture.di.common.ApplicationScope;
 import com.inventyfy.architecture.network.SearchService;
 import com.inventyfy.architecture.network.support.LiveDataCallAdapterFactory;
-import com.inventyfy.architecture.repository.home.search.SearchRepository;
-import com.inventyfy.architecture.repository.home.search.SearchRepositoryImpl;
-import com.inventyfy.architecture.viewmodel.home.search.SearchViewModel;
-
-import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,9 +18,9 @@ public class AppModule {
 
     private static final String DB_NAME = "itunes.db";
 
+    @ApplicationScope
     @Provides
-    @Singleton
-    SearchService provideGithubApiService() {
+    SearchService provideSerachService() {
         return new Retrofit.Builder()
                 .baseUrl("https://itunes.apple.com/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -36,20 +29,9 @@ public class AppModule {
                 .create(SearchService.class);
     }
 
-    @Singleton
+    @ApplicationScope
     @Provides
     AppDatabase getDatabase(Application application) {
         return Room.databaseBuilder(application, AppDatabase.class, DB_NAME).build();
     }
-
-
-    @Provides
-    BaseViewModelFactory provideBaseViewModelFactory() {
-        return new BaseViewModelFactory();
-    }
-
-//    @Provides
-//    ViewModelProvider.Factory provideListIssuesViewModelFactory(BaseViewModelFactory viewModelFactory) {
-//        return viewModelFactory;
-//    }
 }

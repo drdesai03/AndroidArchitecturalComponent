@@ -14,7 +14,10 @@ import javax.inject.Inject;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public abstract class AbstractBaseNormalActivity extends AppCompatActivity {
+public abstract class AbstractBaseNormalActivity extends AppCompatActivity implements HasSupportFragmentInjector {
+
+    @Inject
+    DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
     private Fragment fragmentToChange;
     private boolean isBackStack;
@@ -55,5 +58,10 @@ public abstract class AbstractBaseNormalActivity extends AppCompatActivity {
         }
         this.fragmentToChange = null;
         this.isBackStack = false;
+    }
+
+    @Override
+    public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {
+        return dispatchingAndroidInjector;
     }
 }

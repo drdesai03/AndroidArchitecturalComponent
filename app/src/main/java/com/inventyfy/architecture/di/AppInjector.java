@@ -67,7 +67,7 @@ public class AppInjector {
         }
 
         if (activity instanceof FragmentActivity) {
-            ((AppCompatActivity) activity).getSupportFragmentManager()
+            ((FragmentActivity) activity).getSupportFragmentManager()
                     .registerFragmentLifecycleCallbacks(
                             new FragmentManager.FragmentLifecycleCallbacks() {
                                 @Override

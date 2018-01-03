@@ -9,10 +9,14 @@ import android.text.TextUtils;
 import com.inventyfy.architecture.base.viewmodel.AbstractViewModel;
 import com.inventyfy.architecture.database.table.ResultTable;
 import com.inventyfy.architecture.helper.ResourcesResponse;
+import com.inventyfy.architecture.repository.home.search.SearchRepository;
+import com.inventyfy.architecture.repository.home.search.SearchRepositoryImpl;
 import com.inventyfy.architecture.ui.home.search.bindingentity.ValidationCheckEntity;
 import com.inventyfy.architecture.ui.home.search.contract.SearchContract;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class SearchViewModel extends AbstractViewModel<SearchContract.Presenter> implements SearchContract.Presenter {
 
@@ -20,7 +24,11 @@ public class SearchViewModel extends AbstractViewModel<SearchContract.Presenter>
     private LiveData<ValidationCheckEntity> validation;
     private MutableLiveData<ValidationCheckEntity> validationCheck = new MutableLiveData<>();
 
-    public SearchViewModel() {
+    private SearchRepository searchRepository;
+
+    @Inject
+    SearchViewModel(SearchRepositoryImpl searchRepository) {
+        this.searchRepository = searchRepository;
     }
 
     @Override
@@ -30,7 +38,7 @@ public class SearchViewModel extends AbstractViewModel<SearchContract.Presenter>
 
     @Override
     public LiveData<ResourcesResponse<List<ResultTable>>> getAllSearchResult() {
-        return resultResponse;
+        return searchRepository.getSearchResult("Yelp", null, null, null);
     }
 
     @Override
@@ -52,7 +60,10 @@ public class SearchViewModel extends AbstractViewModel<SearchContract.Presenter>
             } else {
                 localObserver.setValue(new ValidationCheckEntity());
             }
-            return validationCheck;
+            return localObserver;
         });
+    }
+
+    private void getDataFromServer(final String searchTerm) {
     }
 }

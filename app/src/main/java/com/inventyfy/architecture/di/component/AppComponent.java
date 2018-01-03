@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.inventyfy.architecture.ArchitectureApplication;
 import com.inventyfy.architecture.di.common.ApplicationScope;
+import com.inventyfy.architecture.di.module.ActivityModule;
 import com.inventyfy.architecture.di.module.AppModule;
 import com.inventyfy.architecture.di.module.FragmentModule;
 
@@ -15,7 +16,7 @@ import dagger.android.AndroidInjectionModule;
 @Component(modules = {
         AndroidInjectionModule.class,
         AppModule.class,
-        FragmentModule.class
+        ActivityModule.class
 })
 public interface AppComponent {
 

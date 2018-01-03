@@ -17,9 +17,4 @@ public interface SearchContract {
 
         LiveData<ValidationCheckEntity> isDataValid(final String searchTerm, final String country, final String media, final String entity);
     }
-
-    interface View {
-
-        void onSearchQueryError();
-    }
 }

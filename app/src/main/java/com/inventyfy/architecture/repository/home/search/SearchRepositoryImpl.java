@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 
 import com.inventyfy.architecture.database.dao.SearchDao;
 import com.inventyfy.architecture.database.table.ResultTable;
+import com.inventyfy.architecture.di.common.ApplicationScope;
 import com.inventyfy.architecture.helper.AppExecutors;
 import com.inventyfy.architecture.helper.RateLimiter;
 import com.inventyfy.architecture.helper.ResourcesResponse;
@@ -13,19 +14,15 @@ import com.inventyfy.architecture.network.SearchService;
 import com.inventyfy.architecture.network.support.ApiResponse;
 import com.inventyfy.architecture.repository.NetworkBoundResource;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-import retrofit2.Retrofit;
-
-@Singleton
+@ApplicationScope
 public class SearchRepositoryImpl implements SearchRepository {
 
-    @Inject
     AppExecutors appExecutors;
-    @Inject
     SearchService searchService;
 
     private SearchDao searchDao;
@@ -38,9 +35,9 @@ public class SearchRepositoryImpl implements SearchRepository {
     }
 
     @Override
-    public LiveData<ResourcesResponse<ResultTable>> getSearchResult(final String searchQuery, final String country,
-                                                                    final String media, final String entity) {
-        return new NetworkBoundResource<ResultTable, ResultTable>(appExecutors) {
+    public LiveData<ResourcesResponse<List<ResultTable>>> getSearchResult(final String searchQuery, final String country,
+                                                                          final String media, final String entity) {
+        return new NetworkBoundResource<ResultTable, List<ResultTable>>(appExecutors) {
 
             @Override
             protected void saveCallResult(@NonNull ResultTable item) {
@@ -48,13 +45,13 @@ public class SearchRepositoryImpl implements SearchRepository {
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable ResultTable data) {
-                return data == null || rateLimiter.shouldFetch(searchQuery);
+            protected boolean shouldFetch(@Nullable List<ResultTable> data) {
+                return false;
             }
 
             @NonNull
             @Override
-            protected LiveData<ResultTable> loadFromDb() {
+            protected LiveData<List<ResultTable>> loadFromDb() {
                 return null;
             }
 
