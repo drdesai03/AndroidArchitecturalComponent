@@ -11,15 +11,15 @@ public class NetworkBound<R> {
 
     private MediatorLiveData<ResourcesResponse<R>> result = new MediatorLiveData<>();
     private RepositoryBuilder<R> builder;
+    private SaveResult<R> saveResultCallback;
 
     private NetworkBound(RepositoryBuilder<R> builder) {
         this.builder = builder;
     }
 
-    public static <R> LiveData<ResourcesResponse<R>> setBuilder(RepositoryBuilder<R> builder) {
+    public static <R> NetworkBound<R> setBuilder(RepositoryBuilder<R> builder) {
         NetworkBound<R> networkBound = new NetworkBound<>(builder);
-        networkBound.getResponse();
-        return networkBound.asLiveData();
+        return networkBound;
     }
 
     private void getResponse() {
@@ -38,8 +38,11 @@ public class NetworkBound<R> {
             result.addSource(builder.getNetworkResponse(), requestApiResponse -> {
                 if (requestApiResponse != null) {
                     if (requestApiResponse.isSuccess()) {
-                        if(builder.isSaveResult()) {
+                        if (builder.isSaveResult()) {
                             //TODO : save result to database
+                            if (saveResultCallback != null) {
+                                saveResultCallback.saveResult(processResult(requestApiResponse));
+                            }
                         }
                         result.setValue(ResourcesResponse.success(processResult(requestApiResponse)));
                     }
@@ -49,6 +52,7 @@ public class NetworkBound<R> {
     }
 
     public LiveData<ResourcesResponse<R>> asLiveData() {
+        getResponse();
         return result;
     }
 
@@ -57,4 +61,11 @@ public class NetworkBound<R> {
         return response.body;
     }
 
+    public void setSaveResultCallback(SaveResult<R> saveResultCallback) {
+        this.saveResultCallback = saveResultCallback;
+    }
+
+    public interface SaveResult<R> {
+        void saveResult(R result);
+    }
 }

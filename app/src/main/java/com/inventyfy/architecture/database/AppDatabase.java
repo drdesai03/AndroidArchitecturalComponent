@@ -15,5 +15,5 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract SearchDao getSearchDao();
 
-    public abstract ResultDao getResult();
+    public abstract ResultDao getResultDao();
 }

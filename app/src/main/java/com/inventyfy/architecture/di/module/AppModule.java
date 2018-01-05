@@ -4,6 +4,8 @@ import android.app.Application;
 import android.arch.persistence.room.Room;
 
 import com.inventyfy.architecture.database.AppDatabase;
+import com.inventyfy.architecture.database.dao.ResultDao;
+import com.inventyfy.architecture.database.dao.SearchDao;
 import com.inventyfy.architecture.di.common.ApplicationScope;
 import com.inventyfy.architecture.helper.AppExecutors;
 import com.inventyfy.architecture.network.SearchService;
@@ -21,7 +23,7 @@ public class AppModule {
 
     @ApplicationScope
     @Provides
-    SearchService provideSerachService() {
+    SearchService provideSearchService() {
         return new Retrofit.Builder()
                 .baseUrl("https://itunes.apple.com/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -40,5 +42,17 @@ public class AppModule {
     @Provides
     AppExecutors provideAppExecutor() {
         return new AppExecutors();
+    }
+
+    @ApplicationScope
+    @Provides
+    SearchDao provideSearchDao(AppDatabase appDatabase) {
+        return appDatabase.getSearchDao();
+    }
+
+    @ApplicationScope
+    @Provides
+    ResultDao provideResultDao(AppDatabase appDatabase) {
+        return appDatabase.getResultDao();
     }
 }
