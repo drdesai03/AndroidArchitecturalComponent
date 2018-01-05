@@ -3,6 +3,7 @@ package com.inventyfy.architecture.ui.home.search.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -116,9 +117,20 @@ public class SearchFragment extends AbstractBaseHomeFragment<SearchContract.Pres
                         Toast.makeText(getActivity(), "Please Enter all mandatory details", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getActivity(), "All details are look good.!", Toast.LENGTH_SHORT).show();
+                        fetchResult(searchQuery);
                     }
                 });
                 break;
         }
+    }
+
+    private void fetchResult(final String searchQuery) {
+        getPresenter().getAllSearchResult().observe(this, responseResultResourcesResponse -> {
+            if (responseResultResourcesResponse == null) {
+                Log.d("Log", "Result Not found");
+            } else {
+                Log.d("Log", "Result found");
+            }
+        });
     }
 }

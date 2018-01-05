@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import com.inventyfy.architecture.base.viewmodel.AbstractViewModel;
 import com.inventyfy.architecture.database.table.ResultTable;
 import com.inventyfy.architecture.helper.ResourcesResponse;
+import com.inventyfy.architecture.network.ResponseResult;
 import com.inventyfy.architecture.repository.home.search.SearchRepository;
 import com.inventyfy.architecture.repository.home.search.SearchRepositoryImpl;
 import com.inventyfy.architecture.ui.home.search.bindingentity.ValidationCheckEntity;
@@ -37,7 +38,7 @@ public class SearchViewModel extends AbstractViewModel<SearchContract.Presenter>
     }
 
     @Override
-    public LiveData<ResourcesResponse<List<ResultTable>>> getAllSearchResult() {
+    public LiveData<ResourcesResponse<ResponseResult>> getAllSearchResult() {
         return searchRepository.getSearchResult("Yelp", null, null, null);
     }
 

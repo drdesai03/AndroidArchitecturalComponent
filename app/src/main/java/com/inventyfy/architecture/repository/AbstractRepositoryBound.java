@@ -24,15 +24,25 @@ public abstract class AbstractRepositoryBound {
         MediatorLiveData<ResourcesResponse<T>> result = new MediatorLiveData<>();
         this.isRateLimiterRequired = isRateLimiterRequired;
         result.setValue(ResourcesResponse.loading(null));
-        result.addSource(dbSource, data -> {
-            result.removeSource(dbSource);
-            if (isRequiredToFetchFromNetwork("", data)) {
+        if (dbSource == null) {
+            if (isRequiredToFetchFromNetwork("", null)) {
                 //Required to call network
+                fetchFromNetwork(result, dbSource, requestType);
             } else {
                 //Return result with success
-                result.addSource(dbSource, finalResult -> setValue(result, ResourcesResponse.success(data)));
+                result.addSource(dbSource, finalResult -> setValue(result, ResourcesResponse.success(null)));
             }
-        });
+        } else {
+            result.addSource(dbSource, data -> {
+                result.removeSource(dbSource);
+                if (isRequiredToFetchFromNetwork("", data)) {
+                    //Required to call network
+                } else {
+                    //Return result with success
+                    result.addSource(dbSource, finalResult -> setValue(result, ResourcesResponse.success(data)));
+                }
+            });
+        }
         return result;
     }
 

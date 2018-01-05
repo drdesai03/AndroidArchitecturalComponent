@@ -2,6 +2,7 @@ package com.inventyfy.architecture.repository;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,14 +24,15 @@ public abstract class NetworkBoundResource<Request, Response> {
         this.appExecutors = appExecutors;
         result.setValue(ResourcesResponse.loading(null));
         LiveData<Response> dbSource = loadFromDb();
-        result.addSource(dbSource, data -> {
-            result.removeSource(dbSource);
-            if (shouldFetch(data)) {
-                fetchFromNetwork(dbSource);
-            } else {
-                result.addSource(dbSource, newData -> setValue(ResourcesResponse.success(newData)));
-            }
-        });
+//        result.addSource(dbSource, data -> {
+//            result.removeSource(dbSource);
+        if (shouldFetch(null)) {
+            fetchFromNetwork(dbSource);
+//            } else {
+//                result.addSource(dbSource, newData -> setValue(ResourcesResponse.success(newData)));
+//            }
+//        });
+        }
     }
 
     @MainThread
@@ -43,10 +45,10 @@ public abstract class NetworkBoundResource<Request, Response> {
     private void fetchFromNetwork(final LiveData<Response> dbSource) {
         LiveData<ApiResponse<Request>> apiResponse = createCall();
         // we re-attach dbSource as a new source, it will dispatch its latest value quickly
-        result.addSource(dbSource, newData -> setValue(ResourcesResponse.loading(newData)));
+//        result.addSource(dbSource, newData -> setValue(ResourcesResponse.loading(newData)));
         result.addSource(apiResponse, response -> {
             result.removeSource(apiResponse);
-            result.removeSource(dbSource);
+//            result.removeSource(dbSource);
             //noinspection ConstantConditions
             if (response.isSuccess()) {
                 appExecutors.getDiskOp().execute(() -> {
@@ -56,7 +58,7 @@ public abstract class NetworkBoundResource<Request, Response> {
                             // otherwise we will get immediately last cached value,
                             // which may not be updated with latest results received from network.
                             result.addSource(loadFromDb(),
-                                    newData -> setValue(ResourcesResponse.success(newData)))
+                                    response1 -> setValue(ResourcesResponse.success(response1)))
                     );
                 });
             } else {

@@ -5,6 +5,7 @@ import android.arch.persistence.room.Room;
 
 import com.inventyfy.architecture.database.AppDatabase;
 import com.inventyfy.architecture.di.common.ApplicationScope;
+import com.inventyfy.architecture.helper.AppExecutors;
 import com.inventyfy.architecture.network.SearchService;
 import com.inventyfy.architecture.network.support.LiveDataCallAdapterFactory;
 
@@ -33,5 +34,11 @@ public class AppModule {
     @Provides
     AppDatabase getDatabase(Application application) {
         return Room.databaseBuilder(application, AppDatabase.class, DB_NAME).build();
+    }
+
+    @ApplicationScope
+    @Provides
+    AppExecutors provideAppExecutor() {
+        return new AppExecutors();
     }
 }

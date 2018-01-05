@@ -1,20 +1,17 @@
 package com.inventyfy.architecture.repository.home.search;
 
 import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.inventyfy.architecture.database.dao.SearchDao;
-import com.inventyfy.architecture.database.table.ResultTable;
 import com.inventyfy.architecture.di.common.ApplicationScope;
 import com.inventyfy.architecture.helper.AppExecutors;
 import com.inventyfy.architecture.helper.RateLimiter;
 import com.inventyfy.architecture.helper.ResourcesResponse;
+import com.inventyfy.architecture.network.ResponseResult;
 import com.inventyfy.architecture.network.SearchService;
-import com.inventyfy.architecture.network.support.ApiResponse;
-import com.inventyfy.architecture.repository.NetworkBoundResource;
+import com.inventyfy.architecture.repository.NetworkBound;
+import com.inventyfy.architecture.repository.RepositoryBuilder;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -30,36 +27,19 @@ public class SearchRepositoryImpl implements SearchRepository {
     private RateLimiter<String> rateLimiter = new RateLimiter<>(10, TimeUnit.MINUTES);
 
     @Inject
-    SearchRepositoryImpl(SearchService searchService) {
+    SearchRepositoryImpl(SearchService searchService, AppExecutors appExecutors) {
         this.searchService = searchService;
+        this.appExecutors = appExecutors;
     }
 
     @Override
-    public LiveData<ResourcesResponse<List<ResultTable>>> getSearchResult(final String searchQuery, final String country,
-                                                                          final String media, final String entity) {
-        return new NetworkBoundResource<ResultTable, List<ResultTable>>(appExecutors) {
+    public LiveData<ResourcesResponse<ResponseResult>> getSearchResult(final String searchQuery, final String country,
+                                                                       final String media, final String entity) {
+        RepositoryBuilder<ResponseResult> builder = new RepositoryBuilder<>(appExecutors);
+        builder.setNetworkResponse(searchService.getSearchResult(searchQuery))
+                .setSaveResult(true)
+                .setRateLimiter(rateLimiter);
 
-            @Override
-            protected void saveCallResult(@NonNull ResultTable item) {
-
-            }
-
-            @Override
-            protected boolean shouldFetch(@Nullable List<ResultTable> data) {
-                return false;
-            }
-
-            @NonNull
-            @Override
-            protected LiveData<List<ResultTable>> loadFromDb() {
-                return null;
-            }
-
-            @NonNull
-            @Override
-            protected LiveData<ApiResponse<ResultTable>> createCall() {
-                return searchService.getSearchResult(searchQuery, country, media, entity);
-            }
-        }.asLiveData();
+        return NetworkBound.setBuilder(builder);
     }
 }
