@@ -4,9 +4,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.inventyfy.architecture.database.table.SearchTable;
 import com.inventyfy.architecture.databinding.RowSearchItemBinding;
 
+import java.util.List;
+
 public class LastSearchAdapter extends RecyclerView.Adapter<LastSearchAdapter.SearchViewHolder> {
+
+    private List<SearchTable> searchList;
+
+    public LastSearchAdapter(List<SearchTable> data) {
+        this.searchList = data;
+    }
 
     @Override
     public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -17,12 +26,12 @@ public class LastSearchAdapter extends RecyclerView.Adapter<LastSearchAdapter.Se
 
     @Override
     public void onBindViewHolder(SearchViewHolder holder, int position) {
-
+        holder.searchItemBinding.txtLabel.setText(searchList.get(position).getSearchText());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return searchList != null ? searchList.size() : 0;
     }
 
     public class SearchViewHolder extends RecyclerView.ViewHolder {

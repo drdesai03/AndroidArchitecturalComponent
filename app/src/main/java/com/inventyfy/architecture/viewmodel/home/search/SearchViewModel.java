@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.inventyfy.architecture.base.viewmodel.AbstractViewModel;
 import com.inventyfy.architecture.database.table.ResultTable;
+import com.inventyfy.architecture.database.table.SearchTable;
 import com.inventyfy.architecture.helper.ResourcesResponse;
 import com.inventyfy.architecture.network.ResponseResult;
 import com.inventyfy.architecture.repository.home.search.SearchRepository;
@@ -38,14 +39,20 @@ public class SearchViewModel extends AbstractViewModel<SearchContract.Presenter>
     }
 
     @Override
-    public LiveData<ResourcesResponse<ResponseResult>> getAllSearchResult() {
-        return searchRepository.getSearchResult("Yelp", null, null, null);
+    public LiveData<ResourcesResponse<ResponseResult>> getAllSearchResult(final String searchTerm,
+                                                                          final String country, final String media, final String entity) {
+        return searchRepository.getSearchResult(searchTerm, country, media, entity);
     }
 
     @Override
     public LiveData<ValidationCheckEntity> isDataValid(String searchTerm, String country, String media, String entity) {
         checkDetails(searchTerm, country, media, entity);
         return validation;
+    }
+
+    @Override
+    public LiveData<ResourcesResponse<List<SearchTable>>> getAllLatestSearchResult() {
+        return searchRepository.getLastSearchFromDb();
     }
 
     private void checkDetails(final String searchTerm, final String country, final String media, final String entity) {
@@ -63,8 +70,5 @@ public class SearchViewModel extends AbstractViewModel<SearchContract.Presenter>
             }
             return localObserver;
         });
-    }
-
-    private void getDataFromServer(final String searchTerm) {
     }
 }

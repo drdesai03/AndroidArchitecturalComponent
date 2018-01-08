@@ -10,7 +10,7 @@ import com.inventyfy.architecture.database.table.SearchTable;
 
 import javax.inject.Inject;
 
-@Database(entities = {SearchTable.class, ResultTable.class}, version = 1)
+@Database(entities = {SearchTable.class, ResultTable.class}, version = 6, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract SearchDao getSearchDao();

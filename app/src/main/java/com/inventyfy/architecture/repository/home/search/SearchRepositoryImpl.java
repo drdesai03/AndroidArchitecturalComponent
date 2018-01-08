@@ -19,6 +19,7 @@ import com.inventyfy.architecture.network.SearchService;
 import com.inventyfy.architecture.repository.NetworkBound;
 import com.inventyfy.architecture.repository.RepositoryBuilder;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -46,30 +47,36 @@ public class SearchRepositoryImpl implements SearchRepository {
     @Override
     public LiveData<ResourcesResponse<ResponseResult>> getSearchResult(final String searchQuery, final String country,
                                                                        final String media, final String entity) {
-        RepositoryBuilder<ResponseResult> builder = new RepositoryBuilder<>(appExecutors);
-        builder.setNetworkResponse(searchService.getSearchResult(searchQuery))
-                .setSaveResult(true)
-                .setRateLimiter(rateLimiter);
+        RepositoryBuilder<ResponseResult> builder = new RepositoryBuilder<>(searchQuery, appExecutors);
+        builder.setNetworkResponse(searchService.getSearchResult(searchQuery, country, media, entity))
+                .setRateLimiter(rateLimiter)
+                .setShouldSaveResultToDatabase(true);
 
-        NetworkBound<ResponseResult> responseResultNetworkBound = NetworkBound.setBuilder(builder);
-        responseResultNetworkBound.setSaveResultCallback(result -> {
-            //TODO : Save result to database;
-            appExecutors.getDiskOp().execute(() -> {
-                SearchTable searchTable = new SearchTable();
-                searchTable.setSearchText(searchQuery);
-                long id = searchDao.insertSearchQuery(searchTable);
-                for (int i = 0; i < result.getResults().size(); i++) {
-                    result.getResults().get(i).setSearchId((int) id);
-                }
-                appDatabase.beginTransaction();
-                try {
-                    resultDao.insert(result.getResults());
-                    appDatabase.setTransactionSuccessful();
-                } finally {
-                    appDatabase.endTransaction();
-                }
-            });
-        });
+        NetworkBound<ResponseResult> responseResultNetworkBound = NetworkBound.setBuilder(builder, result ->
+                appExecutors.getDiskOp().execute(() -> {
+                    SearchTable searchTable = new SearchTable();
+                    searchTable.setSearchText(searchQuery);
+                    long id = searchDao.insertSearchQuery(searchTable);
+                    for (int i = 0; i < result.getResults().size(); i++) {
+                        result.getResults().get(i).setSearchId((int) id);
+                    }
+                    appDatabase.beginTransaction();
+                    try {
+                        resultDao.insert(result.getResults());
+                        appDatabase.setTransactionSuccessful();
+                    } finally {
+                        appDatabase.endTransaction();
+                    }
+                }));
         return responseResultNetworkBound.asLiveData();
+    }
+
+    @Override
+    public LiveData<ResourcesResponse<List<SearchTable>>> getLastSearchFromDb() {
+        RepositoryBuilder<List<SearchTable>> builder = new RepositoryBuilder<>("SEARCH", appExecutors);
+        builder.setDbSource(searchDao.getAllResult());
+
+        NetworkBound<List<SearchTable>> networkBound = NetworkBound.setBuilder(builder);
+        return networkBound.asLiveData();
     }
 }

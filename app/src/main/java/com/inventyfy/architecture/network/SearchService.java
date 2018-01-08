@@ -11,9 +11,7 @@ import retrofit2.http.Query;
 public interface SearchService {
 
     @GET("search")
-    LiveData<ApiResponse<ResponseResult>> getSearchResult(@Query("term") final String term);
-
-//    @Query("country") final String country,
-//    @Query("media") final String media,
-//    @Query("entity") final String entity
+    LiveData<ApiResponse<ResponseResult>> getSearchResult(@Query("term") final String term, @Query("country") final String country,
+                                                          @Query("media") final String media,
+                                                          @Query("entity") final String entity);
 }

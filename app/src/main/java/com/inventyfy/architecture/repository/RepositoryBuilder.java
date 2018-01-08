@@ -8,14 +8,16 @@ import com.inventyfy.architecture.network.support.ApiResponse;
 
 public class RepositoryBuilder<R> {
 
+    private String keywork;
     private AppExecutors appExecutors;
     private LiveData<R> dbSource;
     private LiveData<ApiResponse<R>> networkResponse;
     private RateLimiter<String> rateLimiter;
-    private boolean isSaveResult;
+    private boolean shouldSaveResultToDatabase;
 
-    public RepositoryBuilder(AppExecutors appExecutors) {
+    public RepositoryBuilder(String keywork, AppExecutors appExecutors) {
         this.appExecutors = appExecutors;
+        this.keywork = keywork;
     }
 
     public RepositoryBuilder setDbSource(LiveData<R> dbSource) {
@@ -33,13 +35,17 @@ public class RepositoryBuilder<R> {
         return this;
     }
 
-    public RepositoryBuilder setSaveResult(boolean saveResult) {
-        isSaveResult = saveResult;
+    public RepositoryBuilder setShouldSaveResultToDatabase(boolean shouldSaveResultToDatabase) {
+        this.shouldSaveResultToDatabase = shouldSaveResultToDatabase;
         return this;
     }
 
     AppExecutors getAppExecutors() {
         return appExecutors;
+    }
+
+    String getKeywork() {
+        return keywork;
     }
 
     LiveData<R> getDbSource() {
@@ -54,7 +60,7 @@ public class RepositoryBuilder<R> {
         return rateLimiter;
     }
 
-    boolean isSaveResult() {
-        return isSaveResult;
+    boolean isShouldSaveResultToDatabase() {
+        return shouldSaveResultToDatabase;
     }
 }

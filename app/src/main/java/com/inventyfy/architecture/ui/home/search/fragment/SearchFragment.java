@@ -2,6 +2,8 @@ package com.inventyfy.architecture.ui.home.search.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 import com.inventyfy.architecture.R;
 import com.inventyfy.architecture.databinding.FragmentSearchBinding;
 import com.inventyfy.architecture.ui.home.AbstractBaseHomeFragment;
+import com.inventyfy.architecture.ui.home.search.adapter.LastSearchAdapter;
 import com.inventyfy.architecture.ui.home.search.bindingentity.CountryEntity;
 import com.inventyfy.architecture.ui.home.search.bindingentity.MediaEntity;
 import com.inventyfy.architecture.ui.home.search.bindingentity.TypeEntity;
@@ -23,6 +26,8 @@ import java.util.List;
 
 public class SearchFragment extends AbstractBaseHomeFragment<SearchContract.Presenter, SearchViewModel, FragmentSearchBinding>
         implements View.OnClickListener {
+
+    private LastSearchAdapter searchAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,6 +51,22 @@ public class SearchFragment extends AbstractBaseHomeFragment<SearchContract.Pres
         getUiHomeInteraction().createToolbar(false, getString(R.string.lbl_search));
 
         updateUi();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getPresenter().getAllLatestSearchResult().observe(this, listResourcesResponse -> {
+            if (listResourcesResponse == null) {
+                Toast.makeText(getActivity(), "No Record Found", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), "Record Found", Toast.LENGTH_SHORT).show();
+                searchAdapter = new LastSearchAdapter(listResourcesResponse.data);
+                getBinding().rvLastSearch.setLayoutManager(new LinearLayoutManager(getActivity()));
+                getBinding().rvLastSearch.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+                getBinding().rvLastSearch.setAdapter(searchAdapter);
+            }
+        });
     }
 
     private void updateUi() {
@@ -117,15 +138,15 @@ public class SearchFragment extends AbstractBaseHomeFragment<SearchContract.Pres
                         Toast.makeText(getActivity(), "Please Enter all mandatory details", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getActivity(), "All details are look good.!", Toast.LENGTH_SHORT).show();
-                        fetchResult(searchQuery);
+                        fetchResult(searchQuery, country, media, entity);
                     }
                 });
                 break;
         }
     }
 
-    private void fetchResult(final String searchQuery) {
-        getPresenter().getAllSearchResult().observe(this, responseResultResourcesResponse -> {
+    private void fetchResult(final String searchQuery, final String country, final String media, final String entity) {
+        getPresenter().getAllSearchResult(searchQuery, country, media, entity).observe(this, responseResultResourcesResponse -> {
             if (responseResultResourcesResponse == null) {
                 Log.d("Log", "Result Not found");
             } else {

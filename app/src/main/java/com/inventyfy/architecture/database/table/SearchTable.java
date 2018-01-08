@@ -4,7 +4,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity(tableName = "search", indices = {@Index(value = "id"), @Index(value = "searchText")})
+@Entity(tableName = "search", indices = {@Index(value = "id"), @Index(value = "searchText", unique = true)})
 public class SearchTable {
     @PrimaryKey(autoGenerate = true)
     private int id;

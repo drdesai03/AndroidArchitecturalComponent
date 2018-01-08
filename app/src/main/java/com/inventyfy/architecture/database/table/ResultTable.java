@@ -1,12 +1,15 @@
 package com.inventyfy.architecture.database.table;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
+import javax.annotation.PropertyKey;
+
 @Entity(tableName = "result",
-        indices = {@Index(value = "id"), @Index(value = "artistId")},
+        indices = {@Index(value = "id"), @Index(value = "trackId", unique = true), @Index(value = "searchId")},
         foreignKeys = {@ForeignKey(entity = SearchTable.class,
                 parentColumns = "id",
                 childColumns = "searchId",
@@ -20,8 +23,10 @@ public class ResultTable {
     private String currency;
     private int price;
     private int searchId;
+    private int trackId;
     private String kind;
-    private String imageUrl;
+    @ColumnInfo(name = "image_url")
+    private String artistViewUrl;
     private String trackName;
 
     public int getId() {
@@ -88,12 +93,12 @@ public class ResultTable {
         this.kind = kind;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getArtistViewUrl() {
+        return artistViewUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setArtistViewUrl(String artistViewUrl) {
+        this.artistViewUrl = artistViewUrl;
     }
 
     public String getTrackName() {
@@ -102,5 +107,13 @@ public class ResultTable {
 
     public void setTrackName(String trackName) {
         this.trackName = trackName;
+    }
+
+    public int getTrackId() {
+        return trackId;
+    }
+
+    public void setTrackId(int trackId) {
+        this.trackId = trackId;
     }
 }

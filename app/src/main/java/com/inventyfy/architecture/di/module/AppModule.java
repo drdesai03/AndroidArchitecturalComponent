@@ -35,7 +35,8 @@ public class AppModule {
     @ApplicationScope
     @Provides
     AppDatabase getDatabase(Application application) {
-        return Room.databaseBuilder(application, AppDatabase.class, DB_NAME).build();
+        return Room.databaseBuilder(application, AppDatabase.class, DB_NAME).fallbackToDestructiveMigration()
+                .build();
     }
 
     @ApplicationScope
