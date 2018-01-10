@@ -1,8 +1,13 @@
-package com.inventyfy.architecture.repository.home.search;
+package com.inventyfy.architecture.repository.home.result;
 
-/**
- * Created by desaidr on 1/10/2018.
- */
+import android.arch.lifecycle.LiveData;
 
-public class ResultRepository {
+import com.inventyfy.architecture.database.table.ResultTable;
+import com.inventyfy.architecture.helper.ResourcesResponse;
+
+import java.util.List;
+
+public interface ResultRepository {
+
+    LiveData<ResourcesResponse<List<ResultTable>>> getAllResultFromSearchId(final int searchId);
 }

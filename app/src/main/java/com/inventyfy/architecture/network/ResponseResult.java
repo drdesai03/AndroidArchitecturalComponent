@@ -12,6 +12,8 @@ public class ResponseResult {
     @SerializedName("results")
     private List<ResultTable> results;
 
+    private int lastInsertedSearchId;
+
     public int getResultCount() {
         return resultCount;
     }
@@ -22,5 +24,14 @@ public class ResponseResult {
 
     public List<ResultTable> getResults() {
         return results;
+    }
+
+    public int getLastInsertedSearchId() {
+        return lastInsertedSearchId;
+    }
+
+    public ResponseResult setLastInsertedSearchId(int lastInsertedSearchId) {
+        this.lastInsertedSearchId = lastInsertedSearchId;
+        return this;
     }
 }

@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.inventyfy.architecture.R;
+import com.inventyfy.architecture.database.table.SearchTable;
 import com.inventyfy.architecture.databinding.FragmentSearchBinding;
 import com.inventyfy.architecture.ui.home.AbstractBaseHomeFragment;
 import com.inventyfy.architecture.ui.home.search.adapter.LastSearchAdapter;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchFragment extends AbstractBaseHomeFragment<SearchContract.Presenter, SearchViewModel, FragmentSearchBinding>
-        implements View.OnClickListener {
+        implements View.OnClickListener, LastSearchAdapter.LastSearchItemClickListener {
 
     private LastSearchAdapter searchAdapter;
 
@@ -61,7 +62,7 @@ public class SearchFragment extends AbstractBaseHomeFragment<SearchContract.Pres
                 Toast.makeText(getActivity(), "No Record Found", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(), "Record Found", Toast.LENGTH_SHORT).show();
-                searchAdapter = new LastSearchAdapter(listResourcesResponse.data);
+                searchAdapter = new LastSearchAdapter(listResourcesResponse.data, this);
                 getBinding().rvLastSearch.setLayoutManager(new LinearLayoutManager(getActivity()));
                 getBinding().rvLastSearch.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
                 getBinding().rvLastSearch.setAdapter(searchAdapter);
@@ -133,7 +134,10 @@ public class SearchFragment extends AbstractBaseHomeFragment<SearchContract.Pres
                 final String media = getBinding().spMedia.getSelectedItem().toString();
                 final String entity = getBinding().spEntity.getSelectedItem().toString();
 
-                getPresenter().isDataValid(searchQuery, country, media, entity).observe(this, validationCheckEntity -> {
+                getPresenter().isDataValid(searchQuery,
+                        getBinding().spCountry.getSelectedItemPosition() == 0 ? null : country,
+                        getBinding().spMedia.getSelectedItemPosition() == 0 ? null : media,
+                        getBinding().spEntity.getSelectedItemPosition() == 0 ? null : entity).observe(this, validationCheckEntity -> {
                     if (validationCheckEntity == null) {
                         Toast.makeText(getActivity(), "Please Enter all mandatory details", Toast.LENGTH_SHORT).show();
                     } else {
@@ -146,12 +150,26 @@ public class SearchFragment extends AbstractBaseHomeFragment<SearchContract.Pres
     }
 
     private void fetchResult(final String searchQuery, final String country, final String media, final String entity) {
-        getPresenter().getAllSearchResult(searchQuery, country, media, entity).observe(this, responseResultResourcesResponse -> {
+        getPresenter().getAllSearchResult(searchQuery,
+                getBinding().spCountry.getSelectedItemPosition() == 0 ? null : country,
+                getBinding().spMedia.getSelectedItemPosition() == 0 ? null : media,
+                getBinding().spEntity.getSelectedItemPosition() == 0 ? null : entity).observe(this, responseResultResourcesResponse -> {
             if (responseResultResourcesResponse == null) {
                 Log.d("Log", "Result Not found");
             } else {
                 Log.d("Log", "Result found");
+                updateFragment(responseResultResourcesResponse.data.getLastInsertedSearchId());
             }
         });
+    }
+
+    @Override
+    public void onLastSearchItemClick(SearchTable searchItem) {
+        updateFragment(searchItem.getId());
+    }
+
+    private void updateFragment(int searchId) {
+        ResultFragment resultFragment = ResultFragment.getInstance(searchId);
+        getUiHomeInteraction().updateFragment(resultFragment, true);
     }
 }

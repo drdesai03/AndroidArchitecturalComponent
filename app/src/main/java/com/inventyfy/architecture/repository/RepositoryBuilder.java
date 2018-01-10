@@ -15,9 +15,9 @@ public class RepositoryBuilder<R> {
     private RateLimiter<String> rateLimiter;
     private boolean shouldSaveResultToDatabase;
 
-    public RepositoryBuilder(String keywork, AppExecutors appExecutors) {
+    public RepositoryBuilder(String keyword, AppExecutors appExecutors) {
         this.appExecutors = appExecutors;
-        this.keywork = keywork;
+        this.keywork = keyword;
     }
 
     public RepositoryBuilder setDbSource(LiveData<R> dbSource) {

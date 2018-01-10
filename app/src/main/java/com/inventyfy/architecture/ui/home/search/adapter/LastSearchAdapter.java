@@ -2,6 +2,7 @@ package com.inventyfy.architecture.ui.home.search.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.inventyfy.architecture.database.table.SearchTable;
@@ -11,10 +12,16 @@ import java.util.List;
 
 public class LastSearchAdapter extends RecyclerView.Adapter<LastSearchAdapter.SearchViewHolder> {
 
-    private List<SearchTable> searchList;
+    public interface LastSearchItemClickListener {
+        void onLastSearchItemClick(final SearchTable searchItem);
+    }
 
-    public LastSearchAdapter(List<SearchTable> data) {
+    private List<SearchTable> searchList;
+    private LastSearchItemClickListener itemClickListener;
+
+    public LastSearchAdapter(List<SearchTable> data, final LastSearchItemClickListener itemClickListener) {
         this.searchList = data;
+        this.itemClickListener = itemClickListener;
     }
 
     @Override
@@ -34,13 +41,22 @@ public class LastSearchAdapter extends RecyclerView.Adapter<LastSearchAdapter.Se
         return searchList != null ? searchList.size() : 0;
     }
 
-    public class SearchViewHolder extends RecyclerView.ViewHolder {
+    public class SearchViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private RowSearchItemBinding searchItemBinding;
 
         public SearchViewHolder(RowSearchItemBinding searchItemBinding) {
             super(searchItemBinding.getRoot());
             this.searchItemBinding = searchItemBinding;
+
+            searchItemBinding.getRoot().setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (itemClickListener != null) {
+                itemClickListener.onLastSearchItemClick(searchList.get(getAdapterPosition()));
+            }
         }
     }
 }

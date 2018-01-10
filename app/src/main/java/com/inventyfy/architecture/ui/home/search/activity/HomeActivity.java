@@ -3,8 +3,10 @@ package com.inventyfy.architecture.ui.home.search.activity;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 
 import com.inventyfy.architecture.R;
+import com.inventyfy.architecture.base.activity.ToolbarListener;
 import com.inventyfy.architecture.databinding.ActivityHomeBinding;
 import com.inventyfy.architecture.ui.home.AbstractBaseHomeActivity;
 import com.inventyfy.architecture.ui.home.search.fragment.SearchFragment;
@@ -38,5 +40,17 @@ public class HomeActivity extends AbstractBaseHomeActivity implements AbstractBa
     @Override
     public void createToolbar(boolean isBackNavigation, String title) {
         updateToolbar(isBackNavigation, title);
+    }
+
+    @Override
+    public void createToolbarWithCallback(boolean isBackNavigation, String title, ToolbarListener toolbarListener) {
+        updateToolbar(isBackNavigation, title, toolbarListener);
+    }
+
+    @Override
+    public void updateFragment(Fragment fragment, boolean addToBackStack) {
+        changeFragment(fragment, addToBackStack);
+        updateFragment(R.id.content_panel);
+
     }
 }

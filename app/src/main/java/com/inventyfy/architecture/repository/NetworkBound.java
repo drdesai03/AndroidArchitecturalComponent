@@ -63,13 +63,16 @@ public class NetworkBound<R> {
                     if (builder.isShouldSaveResultToDatabase()) {
                         //TODO : save result to database
                         if (saveResultCallback != null) {
-                            saveResultCallback.saveResult(processResult(requestApiResponse));
+                            builder.getAppExecutors().getDiskOp().execute(() -> {
+                                saveResultCallback.saveResult(processResult(requestApiResponse));
+
+                                builder.getAppExecutors().getMainThread().execute(() ->
+                                        result.setValue(ResourcesResponse.success(processResult(requestApiResponse))));
+                            });
                         } else {
                             throw new IllegalArgumentException("Please build your network client with saveResult callback");
                         }
                     }
-                    builder.getAppExecutors().getMainThread().execute(() ->
-                            result.setValue(ResourcesResponse.success(processResult(requestApiResponse))));
                 } else {
                     if (isDbRequired) {
                         result.addSource(builder.getDbSource(), newResponse -> {

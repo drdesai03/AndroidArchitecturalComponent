@@ -8,4 +8,6 @@
     <string name="lbl_entity">Entity</string>
 
     <string name="lbl_last_search">Last Searched</string>
+
+    <string name="lbl_result">Result</string>
 </resources>

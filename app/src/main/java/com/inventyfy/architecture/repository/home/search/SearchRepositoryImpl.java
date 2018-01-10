@@ -52,22 +52,22 @@ public class SearchRepositoryImpl implements SearchRepository {
                 .setRateLimiter(rateLimiter)
                 .setShouldSaveResultToDatabase(true);
 
-        NetworkBound<ResponseResult> responseResultNetworkBound = NetworkBound.setBuilder(builder, result ->
-                appExecutors.getDiskOp().execute(() -> {
-                    SearchTable searchTable = new SearchTable();
-                    searchTable.setSearchText(searchQuery);
-                    long id = searchDao.insertSearchQuery(searchTable);
-                    for (int i = 0; i < result.getResults().size(); i++) {
-                        result.getResults().get(i).setSearchId((int) id);
-                    }
-                    appDatabase.beginTransaction();
-                    try {
-                        resultDao.insert(result.getResults());
-                        appDatabase.setTransactionSuccessful();
-                    } finally {
-                        appDatabase.endTransaction();
-                    }
-                }));
+        NetworkBound<ResponseResult> responseResultNetworkBound = NetworkBound.setBuilder(builder, result -> {
+            SearchTable searchTable = new SearchTable();
+            searchTable.setSearchText(searchQuery);
+            long id = searchDao.insertSearchQuery(searchTable);
+            result.setLastInsertedSearchId((int) id);
+            for (int i = 0; i < result.getResults().size(); i++) {
+                result.getResults().get(i).setSearchId(result.getLastInsertedSearchId());
+            }
+            appDatabase.beginTransaction();
+            try {
+                resultDao.insert(result.getResults());
+                appDatabase.setTransactionSuccessful();
+            } finally {
+                appDatabase.endTransaction();
+            }
+        });
         return responseResultNetworkBound.asLiveData();
     }
 

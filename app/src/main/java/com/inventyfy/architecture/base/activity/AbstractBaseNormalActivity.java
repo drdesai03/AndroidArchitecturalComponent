@@ -23,6 +23,10 @@ public abstract class AbstractBaseNormalActivity extends AppCompatActivity imple
     private boolean isBackStack;
 
     public void updateToolbar(final boolean isBackNavigation, final String title) {
+        updateToolbar(isBackNavigation, title, null);
+    }
+
+    public void updateToolbar(final boolean isBackNavigation, final String title, final ToolbarListener toolbarListener) {
         Toolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar == null) {
             return;
@@ -33,6 +37,14 @@ public abstract class AbstractBaseNormalActivity extends AppCompatActivity imple
         getSupportActionBar().setHomeButtonEnabled(true);
 
         getSupportActionBar().setTitle(title);
+
+        toolbar.setNavigationOnClickListener(view -> {
+            if (toolbarListener == null) {
+                onBackPressed();
+            } else {
+                toolbarListener.toolbarButtonPressed();
+            }
+        });
     }
 
     public void changeFragment(final Fragment mFragment, final boolean addToBackStack) {
